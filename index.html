@@ -122,24 +122,15 @@ function inicio() {
   mostrar('vInicio');
 }
 
-/* Código que se agrega a cada app: desvía sus llamadas al portal y ajusta el modo edición */
-function capa(app, edita, nombre) {
-  const ajustes = {
-    rs: `if(E){try{admin=true;var b=document.getElementById('ab');b&&b.classList.add('v');renderManzanas();updateSVG();}catch(e){}}
-         else{try{PIN=String(Math.random());}catch(e){}}`,
-    ext: `var u=document.getElementById('userbtn');
-          if(E){try{user=N;pin='portal';if(u){u.textContent=N;u.classList.add('on');u.onclick=null;}renderPanel();drawSelbar();}catch(e){}}
-          else if(u){u.style.display='none';}`,
-    dashboard: ''
-  };
-  const css = app === 'rs' && !edita ? '<style>button[onclick*="Pin()"]{display:none!important}</style>' : '';
-  return `${css}<script>(function(){var P=window.parent,f=window.fetch.bind(window);
+/* Código que se agrega a cada app: desvía sus llamadas al portal y aplica el ajuste de edición que entrega el servidor */
+function capa(edita, nombre, ajuste, css) {
+  return `${css ? '<style>' + css + '</style>' : ''}<script>(function(){var P=window.parent,f=window.fetch.bind(window);
 window.fetch=function(i,o){var u=typeof i==='string'?i:(i&&i.url)||'';
 if(/^https:\\/\\/script\\.google\\.com\\/macros\\/s\\//.test(u))return P.portalApi(u,o||{});
 if(/(^|\\/)avance\\.json(\\?|$)/.test(u))return P.portalDatos();
 return f(i,o);};
 var E=${edita ? 'true' : 'false'},N=${JSON.stringify(nombre)};
-window.addEventListener('load',function(){setTimeout(function(){${ajustes[app] || ''}},300);});
+window.addEventListener('load',function(){setTimeout(function(){${ajuste || ''}},300);});
 })();<\/script>`;
 }
 
@@ -152,7 +143,7 @@ async function abrir(obra, app) {
     const o = perfil.obras.find(x => x.id === obra), a = o.apps.find(x => x.id === app);
     $('aTitulo').innerHTML = `<b>${esc(o.nombre)}</b> · ${esc(a.nombre)}`;
     $('aPerm').innerHTML = `<span class="badge ${j.permiso === 'modificar' ? 'mod' : 'ver'}">${j.permiso === 'modificar' ? 'Puede modificar' : 'Solo lectura'}</span>`;
-    let html = j.html, c = capa(app, j.permiso === 'modificar', j.nombre);
+    let html = j.html, c = capa(j.permiso === 'modificar', j.nombre, j.ajuste, j.css);
     html = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + c) : c + html;
     $('marco').srcdoc = html;
     mostrar('vApp');
