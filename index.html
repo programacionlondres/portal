@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Portal Londres</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23E18426'/%3E%3Cpath d='M8 16 16 9l8 7v8H8z' fill='white'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--naranjo:#E18426;--azul:#1A1846;--hueso:#F6F1E9;--gris:#ECECEC;--suave:#5d5b7a;--borde:#dcd6cb;--rojo:#DC2626}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:'Hanken Grotesk',system-ui,sans-serif;background:var(--hueso);color:var(--azul);font-size:15px}
+button{font:inherit;cursor:pointer}input{font:inherit}
+.hidden{display:none!important}
+.marca{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;font-size:13px}
+.marca .iso{width:30px;height:30px;border-radius:7px;background:var(--naranjo);display:grid;place-items:center;color:#fff;font-size:16px;letter-spacing:0}
+.marca small{display:block;font-weight:500;letter-spacing:.02em;font-size:12px;opacity:.75}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:linear-gradient(160deg,var(--azul) 0%,var(--azul) 46%,var(--hueso) 46%)}
+.login{background:#fff;width:100%;max-width:380px;border-radius:16px;padding:28px 26px;box-shadow:0 20px 50px rgba(26,24,70,.25)}
+.login .marca{margin-bottom:22px}
+.login h1{font-size:22px;margin:0 0 4px}.login p{margin:0 0 18px;color:var(--suave);font-size:14px}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
+.campo{width:100%;padding:11px 12px;border:1.5px solid var(--borde);border-radius:9px;background:#fff;color:var(--azul)}
+.campo:focus{outline:none;border-color:var(--naranjo)}
+.btn{background:var(--naranjo);color:#fff;border:0;border-radius:9px;padding:11px 16px;font-weight:700}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.full{width:100%;margin-top:18px}
+.btn.sec{background:rgba(255,255,255,.12);color:#fff;padding:7px 12px;font-size:13.5px}
+.error{color:var(--rojo);font-size:13.5px;margin-top:10px;min-height:18px}
+header.top{background:var(--azul);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.quien{display:flex;align-items:center;gap:10px;font-size:13.5px;flex-wrap:wrap}
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:12px;font-weight:700;background:var(--naranjo);color:#fff}
+.badge.ver{background:#fde7cf;color:#8a4a0b}.badge.mod{background:#d9f5e1;color:#14532D}
+main{max-width:1100px;margin:0 auto;padding:22px 16px 60px}
+h2{font-size:24px;margin:0 0 4px}.lead{color:var(--suave);margin:0 0 20px;font-size:14.5px}
+.obra{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:18px;margin-bottom:16px}
+.obra h3{margin:0;font-size:18px}.obra .cod{font-size:12.5px;color:var(--suave);margin-bottom:12px}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.app{border:1.5px solid var(--borde);border-radius:12px;padding:14px;background:var(--hueso);text-align:left;color:var(--azul);transition:border-color .12s,transform .12s}
+.app:hover{border-color:var(--naranjo);transform:translateY(-1px)}
+.app b{display:block;font-size:15.5px;margin-bottom:8px}
+#vApp{display:flex;flex-direction:column;height:100vh}
+.barra{background:#fff;border-bottom:1px solid var(--borde);padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
+.barra a{color:var(--naranjo);font-weight:700;cursor:pointer}
+iframe{flex:1;border:0;width:100%;background:#fff}
+.cargando{position:fixed;inset:0;background:rgba(246,241,233,.85);display:grid;place-items:center;font-weight:600;z-index:9}
+</style>
+</head>
+<body>
+
+<section id="vLogin" class="login-wrap">
+  <form class="login" id="fLogin" autocomplete="off">
+    <div class="marca"><div class="iso">L</div><div>CONSTRUCTORA LONDRES<small>Portal de Obras</small></div></div>
+    <h1>Ingresar</h1>
+    <p>Usa el usuario y la clave que te entregó Programación.</p>
+    <label for="usr">Usuario</label>
+    <input id="usr" class="campo" autocapitalize="none" spellcheck="false">
+    <label for="pwd">Clave</label>
+    <input id="pwd" class="campo" type="password">
+    <div class="error" id="err"></div>
+    <button class="btn full" id="bEntrar" type="submit">Entrar</button>
+  </form>
+</section>
+
+<section id="vInicio" class="hidden">
+  <header class="top">
+    <div class="marca"><div class="iso">L</div><div>CONSTRUCTORA LONDRES<small>Portal de Obras</small></div></div>
+    <div class="quien"><span id="hNombre"></span><span class="badge" id="hCargo"></span><button class="btn sec" onclick="salir()">Salir</button></div>
+  </header>
+  <main id="contenido"></main>
+</section>
+
+<section id="vApp" class="hidden">
+  <div class="barra"><a onclick="volver()">← Mis obras</a><span id="aTitulo"></span><span id="aPerm"></span></div>
+  <iframe id="marco" title="Aplicación"></iframe>
+</section>
+
+<div id="cargando" class="cargando hidden">Cargando…</div>
+
+<script>
+const PORTAL_URL = 'https://script.google.com/macros/s/AKfycbwXBQ_Npo3GHHRbyGAnit_T86GzdfPBzxVGMnO-xmea7AJOdXd-oEMoa6WKxhGzwqun/exec';
+let token = null, perfil = null, actual = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const guardar = (k, v) => { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} };
+const leer = k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+
+async function llamar(datos) {
+  const r = await fetch(PORTAL_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(datos) });
+  const j = await r.json();
+  if (!j.ok && /Sesión (vencida|inválida)/.test(j.error || '')) { cerrarLocal(); throw new Error(j.error); }
+  return j;
+}
+function cargando(on) { $('cargando').classList.toggle('hidden', !on); }
+function mostrar(v) { ['vLogin', 'vInicio', 'vApp'].forEach(x => $(x).classList.toggle('hidden', x !== v)); }
+
+$('fLogin').onsubmit = async ev => {
+  ev.preventDefault();
+  const usuario = $('usr').value.trim().toLowerCase(), clave = $('pwd').value;
+  if (!usuario || !clave) { $('err').textContent = 'Escribe usuario y clave.'; return; }
+  $('bEntrar').disabled = true; $('err').textContent = '';
+  try {
+    const j = await llamar({ accion: 'login', usuario, clave });
+    if (!j.ok) { $('err').textContent = j.error || 'No se pudo ingresar.'; return; }
+    token = j.token; perfil = j.perfil; guardar('pl_t', token); $('pwd').value = '';
+    inicio();
+  } catch (e) { $('err').textContent = 'Sin conexión. Intenta de nuevo.'; }
+  finally { $('bEntrar').disabled = false; }
+};
+
+function inicio() {
+  actual = null; $('marco').srcdoc = '';
+  $('hNombre').textContent = perfil.nombre; $('hCargo').textContent = perfil.cargo;
+  const n = perfil.obras.length;
+  $('contenido').innerHTML = `<h2>Hola, ${esc(perfil.nombre.split(' ')[0])}</h2>
+    <p class="lead">${n ? 'Tienes acceso a ' + n + (n === 1 ? ' obra.' : ' obras.') : 'Tu cuenta aún no tiene obras asignadas.'}</p>` +
+    perfil.obras.map(o => `<div class="obra"><h3>${esc(o.nombre)}</h3><div class="cod">${esc(o.cod)}</div><div class="apps">` +
+      o.apps.map(a => `<button class="app" onclick="abrir('${o.id}','${a.id}')"><b>${esc(a.nombre)}</b>
+        <span class="badge ${a.permiso === 'modificar' ? 'mod' : 'ver'}">${a.permiso === 'modificar' ? 'Puede modificar' : 'Solo lectura'}</span></button>`).join('') +
+      `</div></div>`).join('');
+  mostrar('vInicio');
+}
+
+/* Código que se agrega a cada app: desvía sus llamadas al portal y ajusta el modo edición */
+function capa(app, edita, nombre) {
+  const ajustes = {
+    rs: `if(E){try{admin=true;var b=document.getElementById('ab');b&&b.classList.add('v');renderManzanas();updateSVG();}catch(e){}}
+         else{try{PIN=String(Math.random());}catch(e){}}`,
+    ext: `var u=document.getElementById('userbtn');
+          if(E){try{user=N;pin='portal';if(u){u.textContent=N;u.classList.add('on');u.onclick=null;}renderPanel();drawSelbar();}catch(e){}}
+          else if(u){u.style.display='none';}`,
+    dashboard: ''
+  };
+  const css = app === 'rs' && !edita ? '<style>button[onclick*="Pin()"]{display:none!important}</style>' : '';
+  return `${css}<script>(function(){var P=window.parent,f=window.fetch.bind(window);
+window.fetch=function(i,o){var u=typeof i==='string'?i:(i&&i.url)||'';
+if(/^https:\\/\\/script\\.google\\.com\\/macros\\/s\\//.test(u))return P.portalApi(u,o||{});
+if(/(^|\\/)avance\\.json(\\?|$)/.test(u))return P.portalDatos();
+return f(i,o);};
+var E=${edita ? 'true' : 'false'},N=${JSON.stringify(nombre)};
+window.addEventListener('load',function(){setTimeout(function(){${ajustes[app] || ''}},300);});
+})();<\/script>`;
+}
+
+async function abrir(obra, app) {
+  cargando(true);
+  try {
+    const j = await llamar({ accion: 'app', token, obra, app });
+    if (!j.ok) { alertar(j.error); return; }
+    actual = { obra, app };
+    const o = perfil.obras.find(x => x.id === obra), a = o.apps.find(x => x.id === app);
+    $('aTitulo').innerHTML = `<b>${esc(o.nombre)}</b> · ${esc(a.nombre)}`;
+    $('aPerm').innerHTML = `<span class="badge ${j.permiso === 'modificar' ? 'mod' : 'ver'}">${j.permiso === 'modificar' ? 'Puede modificar' : 'Solo lectura'}</span>`;
+    let html = j.html, c = capa(app, j.permiso === 'modificar', j.nombre);
+    html = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + c) : c + html;
+    $('marco').srcdoc = html;
+    mostrar('vApp');
+  } catch (e) { alertar(e.message); } finally { cargando(false); }
+}
+function alertar(t) { cargando(false); if (!perfil) return; inicio(); const d = document.createElement('p'); d.className = 'error'; d.textContent = t; $('contenido').prepend(d); }
+
+window.portalApi = async (url, o) => {
+  const j = await llamar({ accion: 'api', token, obra: actual.obra, app: actual.app, url, metodo: (o.method || 'GET'), cuerpo: o.body == null ? null : String(o.body) });
+  if (!j.ok) return new Response(JSON.stringify({ ok: false, error: j.error }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  return new Response(j.cuerpo, { status: j.status || 200, headers: { 'Content-Type': 'application/json' } });
+};
+window.portalDatos = async () => {
+  const j = await llamar({ accion: 'datos', token, obra: actual.obra });
+  return new Response(j.ok ? j.texto : '{}', { status: j.ok ? 200 : 403, headers: { 'Content-Type': 'application/json' } });
+};
+
+function volver() { inicio(); }
+function cerrarLocal() { token = null; perfil = null; guardar('pl_t', null); $('marco').srcdoc = ''; mostrar('vLogin'); }
+async function salir() { const t = token; cerrarLocal(); try { await llamar({ accion: 'salir', token: t }); } catch (e) {} }
+
+(async () => {
+  const t = leer('pl_t');
+  if (!t) return;
+  try { const j = await llamar({ accion: 'sesion', token: t }); if (j.ok) { token = t; perfil = j.perfil; inicio(); } else guardar('pl_t', null); }
+  catch (e) { guardar('pl_t', null); }
+})();
+</script>
+</body>
+</html>
